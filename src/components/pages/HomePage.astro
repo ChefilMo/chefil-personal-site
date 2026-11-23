@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { useTranslations, defaultLang, type Lang } from '../../i18n/utils';
+import { withBase } from '../../utils/url';
 import { site } from '../../data/site';
 
 const lang = (Astro.currentLocale ?? defaultLang) as Lang;
@@ -16,13 +17,13 @@ const t = useTranslations(lang);
     </p>
     <div class="mt-8 flex gap-3">
       <a
-        href={`/${lang}/projects/`}
+        href={withBase(`${lang}/projects/`)}
         class="rounded bg-sky-600 px-4 py-2 text-white transition-colors hover:bg-sky-700"
       >
         {t('home.viewProjects')}
       </a>
       <a
-        href={`/${lang}/about/`}
+        href={withBase(`${lang}/about/`)}
         class="rounded border border-gray-300 px-4 py-2 transition-colors hover:border-gray-400 dark:border-gray-600"
       >
         {t('home.contactMe')}

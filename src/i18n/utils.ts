@@ -11,14 +11,15 @@ export function otherLang(lang: Lang): Lang {
   return lang === 'zh' ? 'en' : 'zh';
 }
 
-/** 把当前路径改写为目标语言路径：/zh/about -> /en/about */
+/** 把当前路径改写为目标语言路径（含 base 前缀）：/base/zh/about -> /base/en/about */
 export function getLocalizedPath(pathname: string, lang: Lang): string {
-  const localePrefix = /^\/(zh|en)(?=\/|$)/;
+  const base = import.meta.env.BASE_URL.replace(/\/$/, ''); // '' 或 '/chefil-personal-site'
+  const localePrefix = new RegExp(`^${base}/(zh|en)(?=\\/|$)`);
   if (localePrefix.test(pathname)) {
-    return pathname.replace(localePrefix, `/${lang}`);
+    return pathname.replace(localePrefix, `${base}/${lang}`);
   }
   // 无语言前缀的路径（如 404），回退到目标语言首页
-  return `/${lang}/`;
+  return `${base}/${lang}/`;
 }
 
 export { languages, defaultLang };

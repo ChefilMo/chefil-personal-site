@@ -4,8 +4,9 @@ import tailwindcss from '@tailwindcss/vite';
 
 // https://astro.build/config
 export default defineConfig({
-  // TODO: 部署时替换为真实域名（RSS、canonical 依赖此项）
-  site: 'http://localhost:4321',
+  // GitHub Pages 项目页：站点域名 + 仓库名作为 base 路径
+  site: 'https://chefilmo.github.io',
+  base: '/chefil-personal-site',
   i18n: {
     locales: ['zh', 'en'],
     defaultLocale: 'zh',

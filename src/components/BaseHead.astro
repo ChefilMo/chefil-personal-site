@@ -1,6 +1,7 @@
 ---
 import { languages, defaultLang, type Lang } from '../i18n/utils';
 import { getLocalizedPath } from '../i18n/utils';
+import { withBase } from '../utils/url';
 
 interface Props {
   title: string;
@@ -9,22 +10,24 @@ interface Props {
 
 const { title, description } = Astro.props;
 const lang = (Astro.currentLocale ?? defaultLang) as Lang;
+// import.meta.env.BASE_URL 在 .ts 模块中才 reliably 带尾斜杠，统一走 withBase
+const faviconHref = withBase('favicon.svg');
 ---
 
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>{title}</title>
 <meta name="description" content={description} />
-<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="icon" type="image/svg+xml" href={faviconHref} />
 
 <!-- 语言版本声明：当前语言 + 另一语言的替代链接（SEO hreflang） -->
-<link rel="canonical" href={Astro.url.href} />
+<link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
 {
   Object.keys(languages).map((l) => (
     <link
       rel="alternate"
       hreflang={l}
-      href={new URL(getLocalizedPath(Astro.url.pathname, l as Lang), Astro.site ?? Astro.url).href}
+      href={new URL(getLocalizedPath(Astro.url.pathname, l as Lang), Astro.site).href}
     />
   ))
 }

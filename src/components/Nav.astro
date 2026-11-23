@@ -1,15 +1,16 @@
 ---
 import { useTranslations, otherLang, getLocalizedPath, defaultLang, type Lang } from '../i18n/utils';
+import { withBase } from '../utils/url';
 
 const lang = (Astro.currentLocale ?? defaultLang) as Lang;
 const t = useTranslations(lang);
 
 const links = [
-  { href: `/${lang}/`, key: 'nav.home' },
-  { href: `/${lang}/experience/`, key: 'nav.experience' },
-  { href: `/${lang}/projects/`, key: 'nav.projects' },
-  { href: `/${lang}/blog/`, key: 'nav.blog' },
-  { href: `/${lang}/about/`, key: 'nav.about' },
+  { href: withBase(`${lang}/`), key: 'nav.home' },
+  { href: withBase(`${lang}/experience/`), key: 'nav.experience' },
+  { href: withBase(`${lang}/projects/`), key: 'nav.projects' },
+  { href: withBase(`${lang}/blog/`), key: 'nav.blog' },
+  { href: withBase(`${lang}/about/`), key: 'nav.about' },
 ] as const;
 
 // 当前页高亮：忽略末尾斜杠后做精确匹配

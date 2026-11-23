@@ -1,6 +1,7 @@
 ---
 import BlogPostLayout from '../../../layouts/BlogPostLayout.astro';
 import { getCollection, render, type CollectionEntry } from 'astro:content';
+import { withBase } from '../../../utils/url';
 
 // 为每篇文章按其语言生成路由：/zh/blog/hello-world/、/en/blog/hello-world/
 export async function getStaticPaths() {
@@ -30,7 +31,7 @@ const { post, translation } = Astro.props;
 const { Content } = await render(post);
 
 const translationHref = translation
-  ? `/${translation.data.lang}/blog/${translation.id.split('/').pop()}/`
+  ? withBase(`${translation.data.lang}/blog/${translation.id.split('/').pop()}/`)
   : undefined;
 ---
 

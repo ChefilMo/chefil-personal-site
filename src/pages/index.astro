@@ -1,6 +1,9 @@
 ---
 // 根路径占位页：redirectToDefaultLocale 会自动把 / 重定向到 /zh/
 // https://docs.astro.build/en/guides/internationalization/#redirecttodefaultlocale
+import { withBase } from '../utils/url';
+
+const redirectUrl = withBase('zh/');
 ---
 
-<meta http-equiv="refresh" content="0;url=/zh/" />
+<meta http-equiv="refresh" content={`0;url=${redirectUrl}`} />

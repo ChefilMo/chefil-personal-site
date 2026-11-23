@@ -2,6 +2,7 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import BlogCard from '../../components/BlogCard.astro';
 import { useTranslations, defaultLang, type Lang } from '../../i18n/utils';
+import { withBase } from '../../utils/url';
 import { getCollection } from 'astro:content';
 
 const lang = (Astro.currentLocale ?? defaultLang) as Lang;
@@ -23,7 +24,7 @@ const posts = (await getCollection('blog', ({ data }) => data.lang === lang)).so
             description={post.data.description}
             pubDate={post.data.pubDate}
             tags={post.data.tags}
-            href={`/${lang}/blog/${post.id.split('/').pop()}/`}
+            href={withBase(`${lang}/blog/${post.id.split('/').pop()}/`)}
           />
         ))}
       </div>

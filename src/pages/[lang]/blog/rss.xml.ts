@@ -1,5 +1,6 @@
 import rss from '@astrojs/rss';
 import { getCollection } from 'astro:content';
+import { withBase } from '../../../utils/url';
 
 // 每语言一个 RSS feed：/zh/blog/rss.xml、/en/blog/rss.xml
 export function getStaticPaths() {
@@ -20,7 +21,7 @@ export async function GET(context: { params: { lang: string }; site?: URL }) {
       title: post.data.title,
       description: post.data.description,
       pubDate: post.data.pubDate,
-      link: `/${lang}/blog/${post.id.split('/').pop()}/`,
+      link: withBase(`${lang}/blog/${post.id.split('/').pop()}/`),
     })),
     customData: `<language>${lang === 'zh' ? 'zh-CN' : 'en'}</language>`,
   });
