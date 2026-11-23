@@ -1,0 +1,11 @@
+---
+import { useTranslations, type Lang } from '../i18n/utils';
+
+const lang = Astro.currentLocale as Lang;
+const t = useTranslations(lang);
+const year = new Date().getFullYear();
+---
+
+<footer class="border-t border-gray-200 py-6 text-center text-sm text-gray-500 dark:border-gray-700 dark:text-gray-400">
+  &copy; {year} &middot; {t('footer.rights')}
+</footer>

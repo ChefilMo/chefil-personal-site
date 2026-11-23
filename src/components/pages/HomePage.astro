@@ -1,0 +1,11 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+// 页面实现集中在此组件，zh/en 两个路由文件仅为薄封装，
+// Astro.currentLocale 会根据当前路由（/zh/ 或 /en/）返回正确语言
+const title = 'Home';
+---
+
+<BaseLayout title={title} description="Personal site">
+  <h1 class="text-3xl font-bold">{title}</h1>
+</BaseLayout>

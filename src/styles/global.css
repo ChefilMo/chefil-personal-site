@@ -1,0 +1,9 @@
+@import "tailwindcss";
+
+/* 使 dark: 变体跟随 <html> 上的 .dark class（手动切换主题用） */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: "PingFang SC", "Microsoft YaHei", ui-sans-serif, system-ui,
+    -apple-system, "Segoe UI", Roboto, sans-serif;
+}

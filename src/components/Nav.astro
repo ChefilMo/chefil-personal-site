@@ -1,0 +1,45 @@
+---
+import { useTranslations, otherLang, getLocalizedPath, type Lang } from '../i18n/utils';
+
+const lang = Astro.currentLocale as Lang;
+const t = useTranslations(lang);
+
+const links = [
+  { href: `/${lang}/`, key: 'nav.home' },
+  { href: `/${lang}/experience/`, key: 'nav.experience' },
+  { href: `/${lang}/projects/`, key: 'nav.projects' },
+  { href: `/${lang}/blog/`, key: 'nav.blog' },
+  { href: `/${lang}/about/`, key: 'nav.about' },
+] as const;
+
+// 当前页高亮：忽略末尾斜杠后做精确匹配
+const currentPath = Astro.url.pathname;
+function isActive(href: string): boolean {
+  const path = href.replace(/\/$/, '');
+  return currentPath.replace(/\/$/, '') === path;
+}
+---
+
+<nav class="flex items-center gap-1 sm:gap-2">
+  {
+    links.map((link) => (
+      <a
+        href={link.href}
+        class:list={[
+          'rounded px-2 py-1 text-sm transition-colors',
+          isActive(link.href)
+            ? 'font-medium text-sky-600 dark:text-sky-400'
+            : 'text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white',
+        ]}
+      >
+        {t(link.key)}
+      </a>
+    ))
+  }
+  <a
+    href={getLocalizedPath(currentPath, otherLang(lang))}
+    class="ml-2 rounded border border-gray-300 px-2 py-1 text-sm text-gray-600 transition-colors hover:border-gray-400 hover:text-gray-900 dark:border-gray-600 dark:text-gray-300 dark:hover:text-white"
+  >
+    {t('lang.switch')}
+  </a>
+</nav>

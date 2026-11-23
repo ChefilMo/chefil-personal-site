@@ -1,0 +1,33 @@
+---
+import { languages, type Lang } from '../i18n/utils';
+import { getLocalizedPath } from '../i18n/utils';
+
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+const lang = Astro.currentLocale as Lang;
+---
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>{title}</title>
+<meta name="description" content={description} />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+<!-- 语言版本声明：当前语言 + 另一语言的替代链接（SEO hreflang） -->
+<link rel="canonical" href={Astro.url.href} />
+{
+  Object.keys(languages).map((l) => (
+    <link
+      rel="alternate"
+      hreflang={l}
+      href={new URL(getLocalizedPath(Astro.url.pathname, l as Lang), Astro.site ?? Astro.url).href}
+    />
+  ))
+}
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:locale" content={lang === 'zh' ? 'zh_CN' : 'en_US'} />
