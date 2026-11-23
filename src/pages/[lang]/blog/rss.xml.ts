@@ -16,7 +16,8 @@ export async function GET(context: { params: { lang: string }; site?: URL }) {
   return rss({
     title: lang === 'zh' ? 'Chefil 的博客' : "Chefil's Blog",
     description: lang === 'zh' ? '技术、项目与想法' : 'Technology, projects and ideas',
-    site: context.site!,
+    // channel 链接指向该语言的博客首页（site 根路径不带 base，直接拼会 404）
+    site: new URL(withBase(`${lang}/blog/`), context.site!),
     items: posts.map((post) => ({
       title: post.data.title,
       description: post.data.description,
