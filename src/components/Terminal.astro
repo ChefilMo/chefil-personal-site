@@ -1,0 +1,171 @@
+---
+// 首页互动式终端：输入 help 查看命令，数据来自 src/data/
+import { site } from '../data/site';
+import { experience } from '../data/experience';
+import { projects } from '../data/projects';
+import type { Lang } from '../i18n/utils';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+
+const termData = {
+  lang,
+  name: site.name,
+  title: site.title[lang],
+  bio: site.bio[lang],
+  skills: site.skills,
+  socials: site.socials,
+  experience: experience.map((e) => ({ period: e.period, title: e.title[lang], org: e.org })),
+  projects: projects.map((p) => ({ name: p.name, summary: p.summary[lang], tags: p.tags })),
+};
+---
+
+<div
+  id="terminal"
+  class="overflow-hidden rounded-lg border border-gray-700 bg-gray-950 text-sm text-gray-100 shadow-lg dark:border-gray-600"
+>
+  <div class="flex items-center gap-2 border-b border-gray-700 px-4 py-2">
+    <span class="h-3 w-3 rounded-full bg-red-500"></span>
+    <span class="h-3 w-3 rounded-full bg-yellow-500"></span>
+    <span class="h-3 w-3 rounded-full bg-green-500"></span>
+    <span class="ml-2 text-xs text-gray-400">chefil@portfolio: ~</span>
+  </div>
+  <div id="term-output" class="h-72 overflow-y-auto px-4 py-3 font-mono leading-relaxed"></div>
+  <div class="flex items-center gap-2 px-4 pb-3 font-mono">
+    <span class="shrink-0 text-green-400">$</span>
+    <input
+      id="term-input"
+      type="text"
+      class="w-full bg-transparent text-gray-100 outline-none"
+      autocomplete="off"
+      autocapitalize="off"
+      spellcheck="false"
+      aria-label="terminal input"
+    />
+  </div>
+</div>
+
+<script define:vars={{ termData }}>
+  const output = document.getElementById('term-output');
+  const input = document.getElementById('term-input');
+  const container = document.getElementById('terminal');
+  const zh = termData.lang === 'zh';
+  const history = [];
+  let historyIdx = -1;
+
+  const CMDS = ['help', 'about', 'skills', 'experience', 'projects', 'contact', 'socials', 'whoami', 'date', 'banner', 'clear'];
+
+  const STR = {
+    welcome: zh
+      ? '欢迎来到 Chefil 的终端！输入 help 查看可用命令。'
+      : "Welcome to Chefil's terminal! Type 'help' to see available commands.",
+    noCmd: zh ? '未找到命令：' : 'Command not found: ',
+    tryHelp: zh ? '输入 help 查看可用命令。' : "Type 'help' to see available commands.",
+    help: zh ? '可用命令：' : 'Available commands:',
+    whoami: zh ? '你是一位有品味的访客。' : 'You are a visitor of good taste.',
+  };
+
+  function print(text, cls) {
+    const line = document.createElement('div');
+    if (cls) line.className = cls;
+    line.textContent = text;
+    output.appendChild(line);
+    output.scrollTop = output.scrollHeight;
+  }
+
+  function printLines(lines) {
+    for (const l of lines) print(l);
+  }
+
+  function run(raw) {
+    const cmd = raw.trim();
+    print('$ ' + cmd, 'text-sky-300');
+    if (!cmd) return;
+    history.unshift(cmd);
+    historyIdx = -1;
+
+    const [name, ...args] = cmd.split(/\s+/);
+    switch (name) {
+      case 'help':
+        print(STR.help);
+        for (const c of CMDS) print('  ' + c);
+        break;
+      case 'about':
+        print(termData.name + ' — ' + termData.title);
+        print(termData.bio);
+        break;
+      case 'skills':
+        for (const s of termData.skills) print('  ▸ ' + s);
+        break;
+      case 'experience':
+        for (const e of termData.experience) print(`  ${e.period}  ${e.title} @ ${e.org}`);
+        break;
+      case 'projects':
+        for (const p of termData.projects) print(`  ▸ ${p.name} — ${p.tags.join(' / ')}`);
+        break;
+      case 'contact':
+      case 'socials':
+        for (const s of termData.socials) print(`  ${s.label}: ${s.href}`);
+        break;
+      case 'whoami':
+        print(STR.whoami);
+        break;
+      case 'date':
+        print(new Date().toString());
+        break;
+      case 'echo':
+        print(args.join(' '));
+        break;
+      case 'banner':
+        printLines([
+          '   ____ _   _ _____ _____ _ _ ',
+          '  / ___| | | |  ___|  ___(_) |',
+          ' | |   | |_| | |_  | |_  | |',
+          ' | |___|  _  |  _| |  _| | |',
+          '  \\____|_| |_|_|   |_|   |_|',
+        ]);
+        print(termData.title);
+        break;
+      case 'clear':
+        output.innerHTML = '';
+        break;
+      default:
+        if (CMDS.some((c) => c.startsWith(name))) {
+          print((zh ? '你是不是想输入：' : "Did you mean: ") + CMDS.find((c) => c.startsWith(name)) + '?');
+        } else {
+          print(STR.noCmd + name, 'text-red-400');
+          print(STR.tryHelp, 'text-gray-400');
+        }
+    }
+  }
+
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      run(input.value);
+      input.value = '';
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      if (historyIdx < history.length - 1) {
+        historyIdx++;
+        input.value = history[historyIdx];
+      }
+    } else if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      if (historyIdx > 0) {
+        historyIdx--;
+        input.value = history[historyIdx];
+      } else {
+        historyIdx = -1;
+        input.value = '';
+      }
+    }
+  });
+
+  // 点击终端任意位置聚焦输入框
+  container.addEventListener('click', () => input.focus());
+
+  print(STR.welcome, 'text-green-400');
+</script>

@@ -4,13 +4,19 @@ import { defaultLang, type Lang } from '../i18n/utils';
 
 interface Props {
   project: Project;
+  /** 列表序号，用于进场动画的交错延迟 */
+  index?: number;
 }
 
-const { project } = Astro.props;
+const { project, index = 0 } = Astro.props;
 const lang = (Astro.currentLocale ?? defaultLang) as Lang;
 ---
 
-<article class="rounded-lg border border-gray-200 p-5 transition-shadow hover:shadow-md dark:border-gray-700">
+<article
+  class="rounded-lg border border-gray-200 p-5 transition-shadow hover:shadow-md dark:border-gray-700"
+  data-reveal
+  style={`transition-delay: ${index * 80}ms`}
+>
   {
     project.image && (
       <img src={project.image} alt={project.name} class="mb-4 rounded" loading="lazy" />

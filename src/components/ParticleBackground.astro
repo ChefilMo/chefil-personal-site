@@ -1,0 +1,110 @@
+---
+// 首页全屏粒子网络背景：Canvas 实现，暗/浅色自适应，尊重 prefers-reduced-motion
+---
+
+<canvas id="particle-bg" class="pointer-events-none fixed inset-0 -z-10" aria-hidden="true"></canvas>
+
+<script>
+  const canvas = document.getElementById('particle-bg') as HTMLCanvasElement | null;
+  if (canvas && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const ctx = canvas.getContext('2d');
+    const LINK_DIST = 110; // 粒子连线距离
+    const MOUSE_DIST = 150; // 鼠标影响半径
+    const DENSITY = 14000; // 每多少 px² 一个粒子
+    const MAX_PARTICLES = 90;
+
+    let particles: { x: number; y: number; vx: number; vy: number }[] = [];
+    let mouse = { x: -9999, y: -9999 };
+    let raf = 0;
+
+    function isDark() {
+      return document.documentElement.classList.contains('dark');
+    }
+
+    function resize() {
+      if (!ctx) return;
+      canvas!.width = window.innerWidth;
+      canvas!.height = window.innerHeight;
+      const count = Math.min(Math.floor((canvas!.width * canvas!.height) / DENSITY), MAX_PARTICLES);
+      particles = Array.from({ length: count }, () => ({
+        x: Math.random() * canvas!.width,
+        y: Math.random() * canvas!.height,
+        vx: (Math.random() - 0.5) * 0.4,
+        vy: (Math.random() - 0.5) * 0.4,
+      }));
+    }
+
+    function draw() {
+      if (!ctx) return;
+      ctx.clearRect(0, 0, canvas!.width, canvas!.height);
+      const dark = isDark();
+      const dotColor = dark ? 'rgba(125, 211, 252, 0.6)' : 'rgba(2, 132, 199, 0.5)';
+      const lineColor = dark ? 'rgba(125, 211, 252, ' : 'rgba(2, 132, 199, ';
+
+      for (const p of particles) {
+        // 鼠标轻微吸引
+        const dxm = mouse.x - p.x;
+        const dym = mouse.y - p.y;
+        const dm = Math.hypot(dxm, dym);
+        if (dm < MOUSE_DIST && dm > 0.01) {
+          p.vx += (dxm / dm) * 0.02;
+          p.vy += (dym / dm) * 0.02;
+        }
+        p.x += p.vx;
+        p.y += p.vy;
+        // 限速
+        const v = Math.hypot(p.vx, p.vy);
+        if (v > 0.6) {
+          p.vx = (p.vx / v) * 0.6;
+          p.vy = (p.vy / v) * 0.6;
+        }
+        // 边界回绕
+        if (p.x < 0) p.x = canvas!.width;
+        if (p.x > canvas!.width) p.x = 0;
+        if (p.y < 0) p.y = canvas!.height;
+        if (p.y > canvas!.height) p.y = 0;
+
+        ctx.fillStyle = dotColor;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 1.6, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // 距离近的粒子连线
+      for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const d = Math.hypot(dx, dy);
+          if (d < LINK_DIST) {
+            ctx.strokeStyle = lineColor + (0.25 * (1 - d / LINK_DIST)).toFixed(3) + ')';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.stroke();
+          }
+        }
+      }
+      raf = requestAnimationFrame(draw);
+    }
+
+    function start() {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(draw);
+    }
+
+    window.addEventListener('resize', resize);
+    window.addEventListener('mousemove', (e) => {
+      mouse = { x: e.clientX, y: e.clientY };
+    });
+    // 标签页隐藏时暂停渲染
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) cancelAnimationFrame(raf);
+      else start();
+    });
+
+    resize();
+    start();
+  }
+</script>

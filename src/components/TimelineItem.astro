@@ -4,13 +4,19 @@ import { defaultLang, type Lang } from '../i18n/utils';
 
 interface Props {
   item: ExperienceItem;
+  /** 列表序号，用于进场动画的交错延迟 */
+  index?: number;
 }
 
-const { item } = Astro.props;
+const { item, index = 0 } = Astro.props;
 const lang = (Astro.currentLocale ?? defaultLang) as Lang;
 ---
 
-<li class="relative border-l-2 border-gray-200 pl-6 pb-8 last:pb-0 dark:border-gray-700">
+<li
+  class="relative border-l-2 border-gray-200 pl-6 pb-8 last:pb-0 dark:border-gray-700"
+  data-reveal
+  style={`transition-delay: ${index * 80}ms`}
+>
   <span class="absolute -left-[7px] top-1 h-3 w-3 rounded-full bg-sky-600"></span>
   <p class="text-sm text-gray-500 dark:text-gray-400">{item.period}</p>
   <h3 class="mt-1 text-lg font-semibold">{item.title[lang]}</h3>

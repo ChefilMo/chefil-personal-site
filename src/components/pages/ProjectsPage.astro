@@ -11,6 +11,6 @@ const t = useTranslations(lang);
 <BaseLayout title={`${t('nav.projects')} · Chefil`} description={t('nav.projects')}>
   <h1 class="text-3xl font-bold tracking-tight">{t('nav.projects')}</h1>
   <div class="mt-8 grid gap-5 sm:grid-cols-2">
-    {projects.map((project) => <ProjectCard project={project} />)}
+    {projects.map((project, i) => <ProjectCard project={project} index={i} />)}
   </div>
 </BaseLayout>

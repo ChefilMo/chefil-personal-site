@@ -11,6 +11,6 @@ const t = useTranslations(lang);
 <BaseLayout title={`${t('nav.experience')} · Chefil`} description={t('nav.experience')}>
   <h1 class="text-3xl font-bold tracking-tight">{t('nav.experience')}</h1>
   <ol class="mt-8">
-    {experience.map((item) => <TimelineItem item={item} />)}
+    {experience.map((item, i) => <TimelineItem item={item} index={i} />)}
   </ol>
 </BaseLayout>
