@@ -1,0 +1,45 @@
+---
+import BlogPostLayout from '../../../layouts/BlogPostLayout.astro';
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+
+// 为每篇文章按其语言生成路由：/zh/blog/hello-world/、/en/blog/hello-world/
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts.map((post) => {
+    const slug = post.id.split('/').pop()!;
+    // 查找关联的另一语言版本（translationKey 相同）
+    const translation = posts.find(
+      (p) =>
+        p.data.translationKey &&
+        p.data.translationKey === post.data.translationKey &&
+        p.data.lang !== post.data.lang,
+    );
+    return {
+      params: { lang: post.data.lang, slug },
+      props: { post, translation },
+    };
+  });
+}
+
+interface Props {
+  post: CollectionEntry<'blog'>;
+  translation?: CollectionEntry<'blog'>;
+}
+
+const { post, translation } = Astro.props;
+const { Content } = await render(post);
+
+const translationHref = translation
+  ? `/${translation.data.lang}/blog/${translation.id.split('/').pop()}/`
+  : undefined;
+---
+
+<BlogPostLayout
+  title={post.data.title}
+  description={post.data.description}
+  pubDate={post.data.pubDate}
+  tags={post.data.tags}
+  translationHref={translationHref}
+>
+  <Content />
+</BlogPostLayout>

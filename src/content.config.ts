@@ -1,0 +1,19 @@
+import { defineCollection, z } from 'astro:content';
+import { glob } from 'astro/loaders';
+
+// 博客文章集合：每语言一份独立 Markdown 文件（blog/zh/*.md、blog/en/*.md），
+// 通过 frontmatter 的 translationKey 互相关联
+const blog = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/blog' }),
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    pubDate: z.coerce.date(),
+    lang: z.enum(['zh', 'en']),
+    translationKey: z.string().optional(),
+    tags: z.array(z.string()).optional(),
+    heroImage: z.string().optional(),
+  }),
+});
+
+export const collections = { blog };
