@@ -1,0 +1,30 @@
+---
+// 暗色/亮色主题切换按钮，状态持久化到 localStorage
+---
+
+<button
+  id="theme-toggle"
+  type="button"
+  aria-label="Toggle theme"
+  class="ml-1 rounded border border-gray-300 px-2 py-1 text-sm transition-colors hover:border-gray-400 dark:border-gray-600"
+>
+</button>
+
+<script>
+  const btn = document.getElementById('theme-toggle');
+  const root = document.documentElement;
+
+  function syncIcon() {
+    if (btn) {
+      btn.textContent = root.classList.contains('dark') ? '☀️' : '\u{1F319}';
+    }
+  }
+
+  btn?.addEventListener('click', () => {
+    root.classList.toggle('dark');
+    localStorage.setItem('theme', root.classList.contains('dark') ? 'dark' : 'light');
+    syncIcon();
+  });
+
+  syncIcon();
+</script>

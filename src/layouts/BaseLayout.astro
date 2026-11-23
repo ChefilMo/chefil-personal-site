@@ -2,7 +2,8 @@
 import BaseHead from '../components/BaseHead.astro';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
-import { type Lang } from '../i18n/utils';
+import ThemeToggle from '../components/ThemeToggle.astro';
+import { defaultLang, type Lang } from '../i18n/utils';
 import '../styles/global.css';
 
 interface Props {
@@ -11,18 +12,29 @@ interface Props {
 }
 
 const { title, description } = Astro.props;
-const lang = Astro.currentLocale as Lang;
+const lang = (Astro.currentLocale ?? defaultLang) as Lang;
 ---
 
 <!doctype html>
 <html lang={lang === 'zh' ? 'zh-CN' : 'en'}>
   <head>
+    <!-- 防暗色闪烁：在样式应用前根据存储/系统偏好设置主题 -->
+    <script is:inline>
+      const stored = localStorage.getItem('theme');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (stored === 'dark' || (!stored && prefersDark)) {
+        document.documentElement.classList.add('dark');
+      }
+    </script>
     <BaseHead title={title} description={description} />
   </head>
   <body class="flex min-h-screen flex-col bg-white font-sans text-gray-900 dark:bg-gray-900 dark:text-gray-100">
     <header class="mx-auto flex w-full max-w-4xl items-center justify-between px-4 py-4">
       <a href={`/${lang}/`} class="text-lg font-semibold">Chefil</a>
-      <Nav />
+      <div class="flex items-center">
+        <Nav />
+        <ThemeToggle />
+      </div>
     </header>
     <main class="mx-auto w-full max-w-4xl flex-1 px-4 py-8">
       <slot />

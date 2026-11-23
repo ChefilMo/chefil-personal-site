@@ -1,10 +1,10 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import ProjectCard from '../../components/ProjectCard.astro';
-import { useTranslations, type Lang } from '../../i18n/utils';
+import { useTranslations, defaultLang, type Lang } from '../../i18n/utils';
 import { projects } from '../../data/projects';
 
-const lang = Astro.currentLocale as Lang;
+const lang = (Astro.currentLocale ?? defaultLang) as Lang;
 const t = useTranslations(lang);
 ---
 

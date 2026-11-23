@@ -1,6 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { useTranslations, type Lang } from '../i18n/utils';
+import { useTranslations, defaultLang, type Lang } from '../i18n/utils';
 
 interface Props {
   title: string;
@@ -12,7 +12,7 @@ interface Props {
 }
 
 const { title, description, pubDate, tags = [], translationHref } = Astro.props;
-const lang = Astro.currentLocale as Lang;
+const lang = (Astro.currentLocale ?? defaultLang) as Lang;
 const t = useTranslations(lang);
 const formattedDate = new Intl.DateTimeFormat(lang === 'zh' ? 'zh-CN' : 'en-US', {
   dateStyle: 'long',

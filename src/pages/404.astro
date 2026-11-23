@@ -1,0 +1,21 @@
+---
+// 全站 404 页：无语言前缀，按默认语言渲染
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { useTranslations, defaultLang, type Lang } from '../i18n/utils';
+
+const lang = (Astro.currentLocale ?? defaultLang) as Lang;
+const t = useTranslations(lang);
+---
+
+<BaseLayout title={t('404.title')} description={t('404.title')}>
+  <div class="py-16 text-center">
+    <p class="text-6xl font-bold text-gray-300 dark:text-gray-600">404</p>
+    <h1 class="mt-4 text-2xl font-semibold">{t('404.title')}</h1>
+    <a
+      href={`/${lang}/`}
+      class="mt-6 inline-block rounded bg-sky-600 px-4 py-2 text-white transition-colors hover:bg-sky-700"
+    >
+      {t('404.backHome')}
+    </a>
+  </div>
+</BaseLayout>

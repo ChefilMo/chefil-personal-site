@@ -1,13 +1,13 @@
 ---
 import type { Project } from '../data/projects';
-import type { Lang } from '../i18n/utils';
+import { defaultLang, type Lang } from '../i18n/utils';
 
 interface Props {
   project: Project;
 }
 
 const { project } = Astro.props;
-const lang = Astro.currentLocale as Lang;
+const lang = (Astro.currentLocale ?? defaultLang) as Lang;
 ---
 
 <article class="rounded-lg border border-gray-200 p-5 transition-shadow hover:shadow-md dark:border-gray-700">

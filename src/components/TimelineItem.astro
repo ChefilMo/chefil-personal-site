@@ -1,13 +1,13 @@
 ---
 import type { ExperienceItem } from '../data/experience';
-import type { Lang } from '../i18n/utils';
+import { defaultLang, type Lang } from '../i18n/utils';
 
 interface Props {
   item: ExperienceItem;
 }
 
 const { item } = Astro.props;
-const lang = Astro.currentLocale as Lang;
+const lang = (Astro.currentLocale ?? defaultLang) as Lang;
 ---
 
 <li class="relative border-l-2 border-gray-200 pl-6 pb-8 last:pb-0 dark:border-gray-700">

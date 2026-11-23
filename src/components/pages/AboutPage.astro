@@ -1,9 +1,9 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { useTranslations, type Lang } from '../../i18n/utils';
+import { useTranslations, defaultLang, type Lang } from '../../i18n/utils';
 import { site } from '../../data/site';
 
-const lang = Astro.currentLocale as Lang;
+const lang = (Astro.currentLocale ?? defaultLang) as Lang;
 const t = useTranslations(lang);
 ---
 
