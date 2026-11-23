@@ -1,0 +1,35 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { useTranslations, type Lang } from '../../i18n/utils';
+import { site } from '../../data/site';
+
+const lang = Astro.currentLocale as Lang;
+const t = useTranslations(lang);
+---
+
+<BaseLayout title={`${t('about.heading')} · ${site.name}`} description={site.bio[lang]}>
+  <section class="py-8">
+    <h1 class="text-3xl font-bold tracking-tight">{t('about.heading')}</h1>
+    <p class="mt-6 max-w-2xl leading-relaxed text-gray-700 dark:text-gray-200">
+      {site.bio[lang]}
+    </p>
+  </section>
+
+  <section class="mt-8">
+    <h2 class="text-lg font-semibold text-gray-500 dark:text-gray-400">{t('about.contact')}</h2>
+    <ul class="mt-3 flex flex-wrap gap-3">
+      {
+        site.socials.map((social) => (
+          <li>
+            <a
+              href={social.href}
+              class="rounded border border-gray-300 px-4 py-2 text-sm transition-colors hover:border-gray-400 hover:text-sky-600 dark:border-gray-600 dark:hover:text-sky-400"
+            >
+              {social.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</BaseLayout>

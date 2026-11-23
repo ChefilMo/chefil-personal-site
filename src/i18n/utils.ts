@@ -13,9 +13,12 @@ export function otherLang(lang: Lang): Lang {
 
 /** 把当前路径改写为目标语言路径：/zh/about -> /en/about */
 export function getLocalizedPath(pathname: string, lang: Lang): string {
-  const replaced = pathname.replace(/^\/(zh|en)(?=\/|$)/, `/${lang}`);
+  const localePrefix = /^\/(zh|en)(?=\/|$)/;
+  if (localePrefix.test(pathname)) {
+    return pathname.replace(localePrefix, `/${lang}`);
+  }
   // 无语言前缀的路径（如 404），回退到目标语言首页
-  return replaced === pathname ? `/${lang}/` : replaced;
+  return `/${lang}/`;
 }
 
 export { languages, defaultLang };

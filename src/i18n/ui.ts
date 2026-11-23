@@ -24,6 +24,11 @@ export const ui = {
     'blog.empty': '还没有文章。',
     '404.title': '页面不存在',
     '404.backHome': '返回首页',
+    'home.viewProjects': '查看作品',
+    'home.contactMe': '联系我',
+    'home.skills': '技能',
+    'about.heading': '关于我',
+    'about.contact': '联系方式',
   },
   en: {
     'nav.home': 'Home',
@@ -40,5 +45,10 @@ export const ui = {
     'blog.empty': 'No posts yet.',
     '404.title': 'Page not found',
     '404.backHome': 'Back to home',
+    'home.viewProjects': 'View projects',
+    'home.contactMe': 'Contact me',
+    'home.skills': 'Skills',
+    'about.heading': 'About me',
+    'about.contact': 'Contact',
   },
 } as const;
