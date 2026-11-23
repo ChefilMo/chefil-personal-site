@@ -1,0 +1,16 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import TimelineItem from '../../components/TimelineItem.astro';
+import { useTranslations, type Lang } from '../../i18n/utils';
+import { experience } from '../../data/experience';
+
+const lang = Astro.currentLocale as Lang;
+const t = useTranslations(lang);
+---
+
+<BaseLayout title={`${t('nav.experience')} · Chefil`} description={t('nav.experience')}>
+  <h1 class="text-3xl font-bold tracking-tight">{t('nav.experience')}</h1>
+  <ol class="mt-8">
+    {experience.map((item) => <TimelineItem item={item} />)}
+  </ol>
+</BaseLayout>

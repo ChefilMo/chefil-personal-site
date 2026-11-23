@@ -1,0 +1,10 @@
+---
+import ExperiencePage from '../../components/pages/ExperiencePage.astro';
+
+// 双语薄封装：一次生成 /zh/experience/ 与 /en/experience/ 两条路由
+export function getStaticPaths() {
+  return [{ params: { lang: 'zh' } }, { params: { lang: 'en' } }];
+}
+---
+
+<ExperiencePage />

@@ -1,0 +1,10 @@
+---
+import ProjectsPage from '../../components/pages/ProjectsPage.astro';
+
+// 双语薄封装：一次生成 /zh/projects/ 与 /en/projects/ 两条路由
+export function getStaticPaths() {
+  return [{ params: { lang: 'zh' } }, { params: { lang: 'en' } }];
+}
+---
+
+<ProjectsPage />
