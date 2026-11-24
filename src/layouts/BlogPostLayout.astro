@@ -1,6 +1,15 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { useTranslations, defaultLang, type Lang } from '../i18n/utils';
+import { seriesNames } from '../data/series';
+
+interface SeriesNav {
+  series: string;
+  current: number;
+  total: number;
+  prev?: string;
+  next?: string;
+}
 
 interface Props {
   title: string;
@@ -9,18 +18,46 @@ interface Props {
   tags?: string[];
   /** 另一语言版本的链接（如有） */
   translationHref?: string;
+  /** 系列导航上下文（如文章属于某个系列） */
+  seriesNav?: SeriesNav;
 }
 
-const { title, description, pubDate, tags = [], translationHref } = Astro.props;
+const { title, description, pubDate, tags = [], translationHref, seriesNav } = Astro.props;
 const lang = (Astro.currentLocale ?? defaultLang) as Lang;
 const t = useTranslations(lang);
 const formattedDate = new Intl.DateTimeFormat(lang === 'zh' ? 'zh-CN' : 'en-US', {
   dateStyle: 'long',
 }).format(pubDate);
+const seriesName = seriesNav ? (seriesNames[seriesNav.series]?.[lang] ?? seriesNav.series) : undefined;
 ---
 
 <BaseLayout title={`${title} · Chefil`} description={description}>
   <article>
+    {
+      seriesNav && seriesName && (
+        <nav class="mb-6 rounded-lg border border-sky-200 bg-sky-50 p-4 text-sm dark:border-sky-900 dark:bg-sky-950/40">
+          <p class="font-semibold text-sky-800 dark:text-sky-300">
+            {t('blog.series')} · {seriesName} · {seriesNav.current}/{seriesNav.total}
+          </p>
+          <div class="mt-2 flex flex-wrap gap-x-6 gap-y-1">
+            {seriesNav.prev ? (
+              <a href={seriesNav.prev} class="text-sky-600 hover:underline dark:text-sky-400">
+                &larr; {t('blog.prevPost')}
+              </a>
+            ) : (
+              <span class="text-gray-400 dark:text-gray-600">&larr; {t('blog.prevPost')}</span>
+            )}
+            {seriesNav.next ? (
+              <a href={seriesNav.next} class="text-sky-600 hover:underline dark:text-sky-400">
+                {t('blog.nextPost')} &rarr;
+              </a>
+            ) : (
+              <span class="text-gray-400 dark:text-gray-600">{t('blog.nextPost')} &rarr;</span>
+            )}
+          </div>
+        </nav>
+      )
+    }
     <h1 class="text-3xl font-bold tracking-tight">{title}</h1>
     <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
       {t('blog.publishedAt')} {formattedDate}

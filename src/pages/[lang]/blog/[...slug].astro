@@ -33,6 +33,29 @@ const { Content } = await render(post);
 const translationHref = translation
   ? withBase(`${translation.data.lang}/blog/${translation.id.split('/').pop()}/`)
   : undefined;
+
+// 同系列文章按 seriesOrder 排序，生成上下篇导航
+const seriesPosts = post.data.series
+  ? (
+      await getCollection(
+        'blog',
+        ({ data }) => data.lang === post.data.lang && data.series === post.data.series,
+      )
+    ).sort((a, b) => (a.data.seriesOrder ?? 0) - (b.data.seriesOrder ?? 0))
+  : [];
+const seriesIndex = seriesPosts.findIndex((p) => p.id === post.id);
+const postHref = (p: CollectionEntry<'blog'>) =>
+  withBase(`${p.data.lang}/blog/${p.id.split('/').pop()}/`);
+const seriesNav =
+  post.data.series && seriesIndex >= 0
+    ? {
+        series: post.data.series,
+        current: seriesIndex + 1,
+        total: seriesPosts.length,
+        prev: seriesIndex > 0 ? postHref(seriesPosts[seriesIndex - 1]) : undefined,
+        next: seriesIndex < seriesPosts.length - 1 ? postHref(seriesPosts[seriesIndex + 1]) : undefined,
+      }
+    : undefined;
 ---
 
 <BlogPostLayout
@@ -41,6 +64,7 @@ const translationHref = translation
   pubDate={post.data.pubDate}
   tags={post.data.tags}
   translationHref={translationHref}
+  seriesNav={seriesNav}
 >
   <Content />
 </BlogPostLayout>

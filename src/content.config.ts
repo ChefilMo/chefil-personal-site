@@ -13,6 +13,10 @@ const blog = defineCollection({
     translationKey: z.string().optional(),
     tags: z.array(z.string()).optional(),
     heroImage: z.string().optional(),
+    /** 所属系列 id（对应 src/data/series.ts 中的键） */
+    series: z.string().optional(),
+    /** 系列内序号，决定系列页和上下篇的排序 */
+    seriesOrder: z.number().optional(),
   }),
 });
 
