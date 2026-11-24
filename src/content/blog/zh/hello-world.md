@@ -5,6 +5,7 @@ pubDate: 2026-11-23
 lang: zh
 translationKey: hello-world
 tags: [随笔]
+category: notes
 ---
 
 这是我的新个人网站。在这里我会记录技术学习、项目实践和一些想法。

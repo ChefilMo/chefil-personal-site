@@ -5,6 +5,7 @@ pubDate: 2026-11-23
 lang: zh
 translationKey: iphone-uwb-door-unlock
 tags: [IoT, iOS, BLE, UWB, 技术方案]
+category: ios
 ---
 
 > 手里拎着东西走到车前，车门自己开了——这个体验比亚迪、宝马的用户已经用了很多年。但如果你是一家门禁/智能锁公司，想在 iOS 上实现"人走到门口自动开门"，就会发现这件事远没有想象中直接：**苹果把能力按生态准入切成了三档，选错路，几个月白干。**

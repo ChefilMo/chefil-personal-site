@@ -5,6 +5,7 @@ pubDate: 2026-11-24
 lang: zh
 translationKey: wifi-thermometer-part0
 tags: [嵌入式, STM32, 教程]
+category: embedded
 series: wifi-thermometer
 seriesOrder: 0
 ---

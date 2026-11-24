@@ -5,6 +5,7 @@ pubDate: 2026-11-23
 lang: en
 translationKey: iphone-uwb-door-unlock
 tags: [IoT, iOS, BLE, UWB]
+category: ios
 ---
 
 > Walk up to your car with your hands full and the doors unlock themselves — BYD and BMW owners have enjoyed this for years. But if you run an access-control or smart-lock company and want "walk up to the door and it opens" on iOS, you'll find it's far from straightforward: **Apple slices these capabilities into three tiers of ecosystem access, and picking the wrong path costs you months.**

@@ -17,6 +17,8 @@ const blog = defineCollection({
     series: z.string().optional(),
     /** 系列内序号，决定系列页和上下篇的排序 */
     seriesOrder: z.number().optional(),
+    /** 技术栈分类（对应 src/data/blog-categories.ts 中的键） */
+    category: z.enum(['embedded', 'ios', 'android', 'notes']),
   }),
 });
 

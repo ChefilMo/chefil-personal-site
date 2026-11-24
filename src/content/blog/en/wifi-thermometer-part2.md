@@ -5,6 +5,7 @@ pubDate: 2026-11-24
 lang: en
 translationKey: wifi-thermometer-part2
 tags: [Embedded, STM32, Tutorial]
+category: embedded
 series: wifi-thermometer
 seriesOrder: 2
 ---
