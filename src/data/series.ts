@@ -5,4 +5,8 @@ export const seriesNames: Record<string, { zh: string; en: string }> = {
     zh: '从零做一款 Wi-Fi 温湿度计',
     en: 'Build a Wi-Fi Thermo-Hygrometer from Scratch',
   },
+  'zigbee-meter': {
+    zh: '从零造一个 Zigbee 三相智能电表',
+    en: 'Build a Zigbee Three-Phase Smart Meter from Scratch',
+  },
 };
