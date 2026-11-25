@@ -27,7 +27,7 @@ export const projects: Project[] = [
     },
     tags: ['C', 'ARM Cortex-M0+', '低功耗设计', 'Bootloader/OTA', 'UART 通信协议', 'Keil MDK'],
     links: [],
-    image: 'images/projects/thermo-hygrometer.webp',
+    image: 'images/products/temperature-400b.webp',
     featured: true,
     relatedSeries: 'wifi-thermometer',
   },
@@ -39,7 +39,7 @@ export const projects: Project[] = [
     },
     tags: ['C', '电量计量', 'SPI/UART/I2C', 'ADC 采集', '云端对接'],
     links: [],
-    image: 'images/projects/smart-meter.webp',
+    image: 'images/products/meter-04.webp',
     featured: true,
     relatedSeries: 'zigbee-meter',
   },
@@ -60,5 +60,108 @@ export const projects: Project[] = [
     },
     tags: ['iOS', 'Android', 'WiFi/ZigBee', '推送服务'],
     links: [],
+  },
+];
+
+export type ProductCategory = 'environment' | 'security' | 'energy' | 'control';
+
+export const productCategoryOrder: ProductCategory[] = ['environment', 'security', 'energy', 'control'];
+
+export const productCategoryNames: Record<ProductCategory, LocalizedText> = {
+  environment: { zh: '环境与传感', en: 'Environment & Sensing' },
+  security: { zh: '安防与报警', en: 'Security & Safety' },
+  energy: { zh: '能源与计量', en: 'Energy & Metering' },
+  control: { zh: '智能控制', en: 'Smart Control' },
+};
+
+export interface ProductGroup {
+  id: string;
+  name: LocalizedText;
+  category: ProductCategory;
+  /** public/images/products/ 下的图片文件名 */
+  images: string[];
+}
+
+// 同组图片仅表示同一产品类别，不推断具体型号或硬件参数
+export const productGroups: ProductGroup[] = [
+  {
+    id: 'temperature-humidity',
+    name: { zh: '温湿度传感器', en: 'Temperature & Humidity Sensors' },
+    category: 'environment',
+    images: [
+      'temperature-400b.webp',
+      'temperature-400f.webp',
+      'temperature-400g.webp',
+      'temperature-400h.webp',
+      'temperature-400j.webp',
+      'temperature-400k.webp',
+      'temperature-500c.webp',
+    ],
+  },
+  {
+    id: 'water-leak',
+    name: { zh: '水浸传感器', en: 'Water Leak Sensors' },
+    category: 'environment',
+    images: ['water-400a.webp', 'water-400b.webp', 'water-400c.webp'],
+  },
+  {
+    id: 'presence',
+    name: { zh: '人体存在传感器', en: 'Human Presence Sensor' },
+    category: 'environment',
+    images: ['presence-400a.webp'],
+  },
+  {
+    id: 'smoke',
+    name: { zh: '烟雾报警器', en: 'Smoke Detectors' },
+    category: 'security',
+    images: ['smoke-400a.webp', 'smoke-500a.webp'],
+  },
+  {
+    id: 'gas',
+    name: { zh: '燃气报警器', en: 'Gas Detector' },
+    category: 'security',
+    images: ['gas-400a.webp'],
+  },
+  {
+    id: 'carbon-monoxide',
+    name: { zh: '一氧化碳报警器', en: 'Carbon Monoxide Detector' },
+    category: 'security',
+    images: ['co-400a.webp'],
+  },
+  {
+    id: 'pir',
+    name: { zh: '红外探测器', en: 'PIR Motion Detectors' },
+    category: 'security',
+    images: ['pir-400a.webp', 'pir-400b.webp'],
+  },
+  {
+    id: 'door-window',
+    name: { zh: '门窗传感器', en: 'Door & Window Sensors' },
+    category: 'security',
+    images: ['door-400d.webp', 'door-400s.webp'],
+  },
+  {
+    id: 'vibration',
+    name: { zh: '震动传感器', en: 'Vibration Sensor' },
+    category: 'security',
+    images: ['vibration-400a.webp'],
+  },
+  {
+    id: 'sos',
+    name: { zh: 'SOS 紧急按钮', en: 'SOS Emergency Buttons' },
+    category: 'security',
+    images: ['sos-01.webp', 'sos-02.webp'],
+  },
+  {
+    id: 'energy-meter',
+    name: { zh: '智能电表', en: 'Smart Energy Meters' },
+    category: 'energy',
+    images: ['meter-01.webp', 'meter-04.webp'],
+  },
+  {
+    id: 'garage-control',
+    name: { zh: '车库控制器', en: 'Garage Door Controller' },
+    category: 'control',
+    images: ['garage-400a.webp'],
   },
 ];

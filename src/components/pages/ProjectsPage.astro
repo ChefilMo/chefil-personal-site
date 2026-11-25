@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import ProjectCard from '../../components/ProjectCard.astro';
+import ProductGallery from '../../components/ProductGallery.astro';
 import { useTranslations, defaultLang, type Lang } from '../../i18n/utils';
 import { projects } from '../../data/projects';
 
@@ -9,8 +10,13 @@ const t = useTranslations(lang);
 ---
 
 <BaseLayout title={`${t('nav.projects')} · Chefil`} description={t('nav.projects')}>
-  <h1 class="text-3xl font-bold tracking-tight">{t('nav.projects')}</h1>
-  <div class="mt-8 grid gap-5 sm:grid-cols-2">
-    {projects.map((project, i) => <ProjectCard project={project} index={i} />)}
-  </div>
+  <section>
+    <p class="font-mono text-xs font-semibold tracking-[0.18em] text-cyan-700 dark:text-cyan-300">SELECTED CASE STUDIES</p>
+    <h1 class="mt-3 text-3xl font-bold tracking-tight">{t('projects.caseStudies')}</h1>
+    <p class="mt-3 max-w-2xl text-slate-600 dark:text-slate-400">{t('projects.caseStudiesIntro')}</p>
+    <div class="mt-8 grid gap-6 lg:grid-cols-2">
+      {projects.map((project, i) => <ProjectCard project={project} index={i} />)}
+    </div>
+  </section>
+  <ProductGallery />
 </BaseLayout>

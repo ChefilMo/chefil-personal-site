@@ -1,0 +1,191 @@
+---
+import {
+  productCategoryNames,
+  productCategoryOrder,
+  productGroups,
+  type ProductGroup,
+} from '../data/projects';
+import { useTranslations, defaultLang, type Lang } from '../i18n/utils';
+import { withBase } from '../utils/url';
+
+const lang = (Astro.currentLocale ?? defaultLang) as Lang;
+const t = useTranslations(lang);
+const imageUrl = (file: string) => withBase(`images/products/${file}`);
+const imageAlt = (group: ProductGroup, index: number) =>
+  `${group.name[lang]} · ${t('products.productImage')} ${String(index + 1).padStart(2, '0')}`;
+---
+
+<section id="product-portfolio" class="mt-24 scroll-mt-24">
+  <p class="font-mono text-xs font-semibold tracking-[0.18em] text-cyan-700 dark:text-cyan-300">PRODUCT PORTFOLIO</p>
+  <h2 class="mt-3 text-3xl font-bold tracking-tight">{t('projects.portfolio')}</h2>
+  <p class="mt-3 max-w-2xl text-slate-600 dark:text-slate-400">{t('projects.portfolioIntro')}</p>
+
+  <nav class="mt-7 flex flex-wrap gap-2" aria-label={t('projects.portfolio')}>
+    {
+      productCategoryOrder.map((category) => (
+        <a
+          href={`#product-${category}`}
+          class="rounded-full border border-slate-200/80 bg-white/60 px-4 py-2 text-sm text-slate-600 transition-colors hover:border-cyan-400 hover:text-cyan-700 dark:border-white/10 dark:bg-white/5 dark:text-slate-300 dark:hover:border-cyan-600 dark:hover:text-cyan-300"
+        >
+          {productCategoryNames[category][lang]}
+        </a>
+      ))
+    }
+  </nav>
+
+  <div class="mt-12 space-y-16">
+    {
+      productCategoryOrder.map((category) => {
+        const groups = productGroups.filter((group) => group.category === category);
+        return (
+          <section id={`product-${category}`} class="scroll-mt-28" data-reveal>
+            <div class="flex items-center gap-4">
+              <h3 class="text-xl font-semibold">{productCategoryNames[category][lang]}</h3>
+              <span class="font-mono text-xs text-slate-400">{String(groups.length).padStart(2, '0')}</span>
+              <span class="h-px flex-1 bg-slate-200 dark:bg-white/10"></span>
+            </div>
+
+            <div class="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {
+                groups.map((group) => (
+                  <article
+                    class="overflow-hidden rounded-2xl border border-slate-200/80 bg-white/75 shadow-sm transition-colors hover:border-cyan-300 dark:border-white/10 dark:bg-slate-900/70 dark:hover:border-cyan-700"
+                    data-product-card
+                  >
+                    <a
+                      href={imageUrl(group.images[0])}
+                      class="group relative block aspect-square overflow-hidden border-b border-slate-100 bg-white dark:border-white/10"
+                      aria-label={`${group.name[lang]} · ${t('products.viewImage')}`}
+                      data-product-main-link
+                      data-zoom-label={t('products.viewImage')}
+                    >
+                      <img
+                        src={imageUrl(group.images[0])}
+                        alt={imageAlt(group, 0)}
+                        width="800"
+                        height="800"
+                        loading="lazy"
+                        class="h-full w-full object-contain p-5 transition-transform duration-300 group-hover:scale-[1.03]"
+                        data-product-main
+                      />
+                      <span class="absolute left-4 top-4 rounded-full border border-slate-200/80 bg-white/85 px-2.5 py-1 font-mono text-[0.65rem] text-slate-500 backdrop-blur">
+                        {group.images.length} {t(group.images.length === 1 ? 'products.imageCountSingle' : 'products.imageCount')}
+                      </span>
+                      <span class="absolute bottom-4 right-4 flex h-9 w-9 items-center justify-center rounded-full bg-slate-950/80 text-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" class="h-4 w-4" aria-hidden="true">
+                          <path d="M8 3H3v5M16 3h5v5M8 21H3v-5M16 21h5v-5"></path>
+                        </svg>
+                      </span>
+                    </a>
+
+                    <div class="p-5">
+                      <h4 class="font-semibold tracking-tight">{group.name[lang]}</h4>
+                      {
+                        group.images.length > 1 && (
+                          <div class="mt-4 flex flex-wrap gap-2">
+                            {
+                              group.images.map((image, index) => (
+                                <a
+                                  href={imageUrl(image)}
+                                  aria-label={imageAlt(group, index)}
+                                  aria-current={index === 0 ? 'true' : undefined}
+                                  data-alt={imageAlt(group, index)}
+                                  data-product-thumb
+                                  class:list={[
+                                    'block h-12 w-12 overflow-hidden rounded-lg border bg-white p-1 transition-all hover:opacity-100',
+                                    index === 0
+                                      ? 'border-cyan-500 opacity-100'
+                                      : 'border-transparent opacity-55',
+                                  ]}
+                                >
+                                  <img
+                                    src={imageUrl(image)}
+                                    alt=""
+                                    width="800"
+                                    height="800"
+                                    loading="lazy"
+                                    class="h-full w-full object-contain"
+                                  />
+                                </a>
+                              ))
+                            }
+                          </div>
+                        )
+                      }
+                    </div>
+                  </article>
+                ))
+              }
+            </div>
+          </section>
+        );
+      })
+    }
+  </div>
+</section>
+
+<dialog
+  id="product-lightbox"
+  aria-label={t('products.viewImage')}
+  class="m-auto w-[min(92vw,56rem)] max-w-none rounded-2xl bg-slate-950 p-0 text-white shadow-2xl backdrop:bg-slate-950/85 backdrop:backdrop-blur-sm"
+>
+  <div class="relative">
+    <img id="product-lightbox-image" src={imageUrl(productGroups[0].images[0])} alt="" class="max-h-[82vh] min-h-40 w-full bg-white object-contain" />
+    <p id="product-lightbox-caption" class="absolute bottom-3 left-3 max-w-[calc(100%-1.5rem)] rounded-full bg-slate-950/80 px-4 py-2 text-xs text-slate-200 backdrop-blur"></p>
+    <button
+      id="product-lightbox-close"
+      type="button"
+      aria-label={t('products.closeImage')}
+      class="absolute right-3 top-3 flex h-10 w-10 items-center justify-center rounded-full bg-slate-950/80 text-white transition-colors hover:bg-cyan-500 hover:text-slate-950"
+    >
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="h-5 w-5" aria-hidden="true">
+        <path d="m6 6 12 12M18 6 6 18"></path>
+      </svg>
+    </button>
+  </div>
+</dialog>
+
+<script>
+  const dialog = document.getElementById('product-lightbox') as HTMLDialogElement | null;
+  const dialogImage = document.getElementById('product-lightbox-image') as HTMLImageElement | null;
+  const dialogCaption = document.getElementById('product-lightbox-caption');
+
+  document.querySelectorAll<HTMLElement>('[data-product-card]').forEach((card) => {
+    const main = card.querySelector<HTMLImageElement>('[data-product-main]');
+    const mainLink = card.querySelector<HTMLAnchorElement>('[data-product-main-link]');
+    const thumbnails = [...card.querySelectorAll<HTMLAnchorElement>('[data-product-thumb]')];
+
+    for (const thumbnail of thumbnails) {
+      thumbnail.addEventListener('click', (event) => {
+        if (!main || !mainLink) return;
+        event.preventDefault();
+        main.src = thumbnail.href;
+        main.alt = thumbnail.dataset.alt ?? '';
+        mainLink.href = thumbnail.href;
+        mainLink.setAttribute('aria-label', `${main.alt} · ${mainLink.dataset.zoomLabel ?? ''}`);
+        for (const item of thumbnails) {
+          const active = item === thumbnail;
+          item.setAttribute('aria-current', String(active));
+          item.classList.toggle('border-cyan-500', active);
+          item.classList.toggle('border-transparent', !active);
+          item.classList.toggle('opacity-100', active);
+          item.classList.toggle('opacity-55', !active);
+        }
+      });
+    }
+
+    mainLink?.addEventListener('click', (event) => {
+      if (!dialog || !dialogImage || !main) return;
+      event.preventDefault();
+      dialogImage.src = main.src;
+      dialogImage.alt = main.alt;
+      if (dialogCaption) dialogCaption.textContent = main.alt;
+      dialog.showModal();
+    });
+  });
+
+  document.getElementById('product-lightbox-close')?.addEventListener('click', () => dialog?.close());
+  dialog?.addEventListener('click', (event) => {
+    if (event.target === dialog) dialog.close();
+  });
+</script>
