@@ -50,4 +50,4 @@ Tailwind CSS 4 通过 `astro.config.mjs` 中的 Vite 插件接入，不使用独
 
 ### 部署
 
-`.github/workflows/deploy.yml`：push 到 `main` 自动构建并发布到 GitHub Pages（`withastro/action@v3`，Node 24）。`astro.config.mjs` 里的 `site`/`base` 与线上地址强绑定，改仓库名或域名时必须同步修改。
+`.github/workflows/deploy.yml`：push 到 `main` 自动构建并发布到 GitHub Pages（`withastro/action@v6`，Node 24）。`astro.config.mjs` 里的 `site`/`base` 与线上地址强绑定，改仓库名或域名时必须同步修改。
