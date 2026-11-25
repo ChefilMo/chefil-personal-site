@@ -19,7 +19,7 @@ const termData = {
   skills: site.skills,
   socials: site.socials,
   experience: experience.map((e) => ({ period: e.period, title: e.title[lang], org: e.org })),
-  projects: projects.map((p) => ({ name: p.name, summary: p.summary[lang], tags: p.tags })),
+  projects: projects.map((p) => ({ name: p.name[lang], summary: p.summary[lang], tags: p.tags })),
 };
 ---
 

@@ -3,61 +3,173 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import { useTranslations, defaultLang, type Lang } from '../../i18n/utils';
 import { withBase } from '../../utils/url';
 import { site } from '../../data/site';
+import { projects } from '../../data/projects';
+import { seriesNames } from '../../data/series';
+import { getCollection } from 'astro:content';
 import ParticleBackground from '../../components/ParticleBackground.astro';
 import Terminal from '../../components/Terminal.astro';
 
 const lang = (Astro.currentLocale ?? defaultLang) as Lang;
 const t = useTranslations(lang);
+const featuredProjects = projects.filter((project) => project.featured);
+const posts = await getCollection('blog', ({ data }) => data.lang === lang);
+const seriesShowcase = Object.entries(seriesNames).map(([id, names]) => ({
+  id,
+  names,
+  count: posts.filter((post) => post.data.series === id).length,
+}));
+const contactHref = site.socials.find((social) => social.label === 'Email')?.href ?? withBase(`${lang}/about/`);
 ---
 
 <BaseLayout title={site.name} description={site.tagline[lang]}>
   <ParticleBackground />
 
-  <section class="py-12" data-reveal>
-    <h1 class="text-4xl font-bold tracking-tight">{site.name}</h1>
-    <p class="mt-2 text-xl text-gray-600 dark:text-gray-300">{site.title[lang]}</p>
-    <p
-      id="tagline"
-      data-text={site.tagline[lang]}
-      aria-label={site.tagline[lang]}
-      class="mt-6 min-h-8 max-w-2xl leading-relaxed text-gray-700 dark:text-gray-200"
-    >
-      {site.tagline[lang]}
-    </p>
-    <div class="mt-8 flex gap-3">
-      <a
-        href={withBase(`${lang}/projects/`)}
-        class="rounded bg-sky-600 px-4 py-2 text-white transition-colors hover:bg-sky-700"
+  <section class="grid items-center gap-12 py-6 lg:grid-cols-[1.05fr_0.95fr] lg:py-12">
+    <div data-reveal>
+      <div class="flex items-center gap-4">
+        <img
+          src={withBase('images/avatar.webp')}
+          alt={site.name}
+          width="512"
+          height="482"
+          class="h-20 w-20 rounded-2xl border border-white/60 object-cover shadow-lg shadow-pink-200/30 ring-1 ring-slate-900/5 dark:border-white/10 dark:shadow-black/20 dark:ring-white/10"
+        />
+        <div>
+          <p class="font-mono text-xs font-semibold tracking-[0.18em] text-cyan-700 dark:text-cyan-300">CHEFIL / IOT ENGINEER</p>
+          <p class="mt-1.5 text-sm text-slate-600 dark:text-slate-400">{site.title[lang]}</p>
+        </div>
+      </div>
+
+      <h1 class="mt-8 max-w-3xl text-balance text-4xl font-bold leading-[1.12] tracking-[-0.035em] text-slate-950 dark:text-white sm:text-5xl lg:text-6xl">
+        {site.headline[lang]}
+      </h1>
+      <p
+        id="tagline"
+        data-text={site.tagline[lang]}
+        aria-label={site.tagline[lang]}
+        class="mt-6 min-h-14 max-w-2xl text-base leading-relaxed text-slate-600 dark:text-slate-300 sm:text-lg"
       >
-        {t('home.viewProjects')}
-      </a>
-      <a
-        href={withBase(`${lang}/about/`)}
-        class="rounded border border-gray-300 px-4 py-2 transition-colors hover:border-gray-400 dark:border-gray-600"
-      >
-        {t('home.contactMe')}
-      </a>
+        {site.tagline[lang]}
+      </p>
+      <div class="mt-8 flex flex-wrap gap-3">
+        <a
+          href={contactHref}
+          class="inline-flex items-center gap-2 rounded-full bg-slate-950 px-5 py-3 text-sm font-medium text-white shadow-lg shadow-slate-950/10 transition-all hover:-translate-y-0.5 hover:bg-cyan-700 dark:bg-cyan-400 dark:text-slate-950 dark:shadow-cyan-950/20 dark:hover:bg-cyan-300"
+        >
+          {t('home.contactMe')}
+          <span aria-hidden="true">&nearr;</span>
+        </a>
+        <a
+          href={withBase(`${lang}/projects/`)}
+          class="inline-flex items-center gap-2 rounded-full border border-slate-300/80 bg-white/60 px-5 py-3 text-sm font-medium text-slate-700 backdrop-blur transition-colors hover:border-cyan-500 hover:text-cyan-700 dark:border-white/15 dark:bg-white/5 dark:text-slate-200 dark:hover:border-cyan-400 dark:hover:text-cyan-300"
+        >
+          {t('home.viewProjects')}
+          <span aria-hidden="true">&rarr;</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="relative" data-reveal style="transition-delay: 120ms">
+      <div class="absolute -inset-8 -z-10 rounded-full bg-cyan-400/15 blur-3xl dark:bg-cyan-500/10" aria-hidden="true"></div>
+      <div class="mb-3 flex items-center justify-between px-1 font-mono text-[0.68rem] tracking-[0.16em] text-slate-500 dark:text-slate-400">
+        <span>INTERACTIVE PROFILE</span>
+        <span class="flex items-center gap-1.5"><span class="h-1.5 w-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]"></span>ONLINE</span>
+      </div>
+      <Terminal lang={lang} />
     </div>
   </section>
 
-  <section class="mt-8" data-reveal>
-    <h2 class="text-lg font-semibold text-gray-500 dark:text-gray-400">{t('home.skills')}</h2>
-    <ul class="mt-3 flex flex-wrap gap-2">
-      {
-        site.skills.map((skill) => (
-          <li class="rounded-full bg-gray-100 px-3 py-1 text-sm text-gray-700 dark:bg-gray-800 dark:text-gray-200">
-            {skill}
-          </li>
-        ))
-      }
-    </ul>
+  <section class="mt-12 grid overflow-hidden rounded-3xl border border-slate-200/80 bg-white/60 backdrop-blur sm:grid-cols-3 dark:border-white/10 dark:bg-white/[0.035]" data-reveal>
+    {
+      site.stats.map((stat, index) => (
+        <div class:list={['px-6 py-7 sm:px-8', index > 0 && 'border-t border-slate-200/80 sm:border-l sm:border-t-0 dark:border-white/10']}>
+          <p class="font-mono text-3xl font-semibold tracking-tight text-slate-950 dark:text-white">{stat.value[lang]}</p>
+          <p class="mt-2 text-sm text-slate-500 dark:text-slate-400">{stat.label[lang]}</p>
+        </div>
+      ))
+    }
   </section>
 
-  <section class="mt-12" data-reveal>
-    <h2 class="mb-3 text-lg font-semibold text-gray-500 dark:text-gray-400">
-      {lang === 'zh' ? '终端' : 'Terminal'}
-    </h2>
-    <Terminal lang={lang} />
+  <section class="mt-24" data-reveal>
+    <div class="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+      <div>
+        <p class="font-mono text-xs font-semibold tracking-[0.18em] text-cyan-700 dark:text-cyan-300">01 / SELECTED WORK</p>
+        <h2 class="mt-3 text-3xl font-bold tracking-tight">{t('home.featuredProjects')}</h2>
+        <p class="mt-3 text-slate-600 dark:text-slate-400">{t('home.featuredProjectsIntro')}</p>
+      </div>
+      <a href={withBase(`${lang}/projects/`)} class="shrink-0 text-sm font-medium text-cyan-700 hover:underline dark:text-cyan-300">
+        {t('home.viewAllProjects')} &rarr;
+      </a>
+    </div>
+
+    <div class="mt-8 grid gap-6 lg:grid-cols-2">
+      {
+        featuredProjects.map((project, index) => (
+          <article class="group overflow-hidden rounded-3xl border border-slate-200/80 bg-white/75 shadow-sm transition-all hover:-translate-y-1 hover:border-cyan-300 hover:shadow-xl hover:shadow-cyan-950/5 dark:border-white/10 dark:bg-slate-900/70 dark:hover:border-cyan-700 dark:hover:shadow-black/20">
+            <div class="relative aspect-[16/10] overflow-hidden border-b border-slate-100 bg-white dark:border-white/10">
+              <img
+                src={withBase(project.image!)}
+                alt={project.name[lang]}
+                width="800"
+                height="800"
+                loading="lazy"
+                class="h-full w-full object-contain p-5 transition-transform duration-500 group-hover:scale-[1.04]"
+              />
+              <span class="absolute left-5 top-5 rounded-full border border-slate-200/80 bg-white/80 px-3 py-1 font-mono text-[0.65rem] tracking-widest text-slate-500 backdrop-blur">0{index + 1} / PRODUCT</span>
+            </div>
+            <div class="p-6 sm:p-7">
+              <h3 class="text-xl font-semibold tracking-tight">{project.name[lang]}</h3>
+              <p class="mt-3 line-clamp-4 text-sm leading-relaxed text-slate-600 dark:text-slate-400">{project.summary[lang]}</p>
+              <ul class="mt-5 flex flex-wrap gap-2">
+                {project.tags.slice(0, 3).map((tag) => <li class="rounded-full bg-slate-100 px-3 py-1 font-mono text-xs text-slate-600 dark:bg-white/5 dark:text-slate-300">{tag}</li>)}
+              </ul>
+              {project.relatedSeries && (
+                <a href={withBase(`${lang}/blog/series/${project.relatedSeries}/`)} class="mt-6 inline-flex items-center gap-2 text-sm font-medium text-cyan-700 hover:underline dark:text-cyan-300">
+                  {t('project.relatedSeries')} <span aria-hidden="true">&rarr;</span>
+                </a>
+              )}
+            </div>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="mt-24" data-reveal>
+    <p class="font-mono text-xs font-semibold tracking-[0.18em] text-cyan-700 dark:text-cyan-300">02 / FIELD NOTES</p>
+    <h2 class="mt-3 text-3xl font-bold tracking-tight">{t('home.seriesTitle')}</h2>
+    <p class="mt-3 max-w-2xl text-slate-600 dark:text-slate-400">{t('home.seriesIntro')}</p>
+    <div class="mt-8 grid gap-5 md:grid-cols-2">
+      {
+        seriesShowcase.map((series, index) => (
+          <a href={withBase(`${lang}/blog/series/${series.id}/`)} class="group relative overflow-hidden rounded-3xl border border-slate-200/80 bg-slate-950 p-7 text-white dark:border-white/10">
+            <div class="absolute -right-10 -top-16 h-44 w-44 rounded-full bg-cyan-400/20 blur-3xl transition-colors group-hover:bg-cyan-400/30" aria-hidden="true"></div>
+            <div class="relative">
+              <div class="flex items-center justify-between font-mono text-xs text-cyan-300">
+                <span>SERIES 0{index + 1}</span>
+                <span>{series.count} {t('blog.postCount')}</span>
+              </div>
+              <h3 class="mt-10 text-2xl font-semibold leading-snug">{series.names[lang]}</h3>
+              <p class="mt-8 inline-flex items-center gap-2 text-sm text-slate-300 transition-colors group-hover:text-cyan-300">{t('home.readSeries')} <span aria-hidden="true">&rarr;</span></p>
+            </div>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="relative mt-24 overflow-hidden rounded-3xl bg-slate-950 px-7 py-10 text-white sm:px-10 sm:py-12 dark:border dark:border-white/10" data-reveal>
+    <div class="absolute right-0 top-0 h-64 w-64 translate-x-1/3 -translate-y-1/3 rounded-full bg-cyan-400/20 blur-3xl" aria-hidden="true"></div>
+    <div class="relative flex flex-col justify-between gap-8 md:flex-row md:items-center">
+      <div class="max-w-2xl">
+        <p class="font-mono text-xs tracking-[0.18em] text-cyan-300">LET'S BUILD SOMETHING REAL</p>
+        <h2 class="mt-4 text-3xl font-bold tracking-tight">{t('home.collaborationTitle')}</h2>
+        <p class="mt-4 leading-relaxed text-slate-300">{t('home.collaborationText')}</p>
+      </div>
+      <a href={contactHref} class="inline-flex shrink-0 items-center justify-center gap-2 rounded-full bg-cyan-400 px-6 py-3.5 text-sm font-semibold text-slate-950 transition-colors hover:bg-cyan-300">
+        {t('home.contactMe')} <span aria-hidden="true">&nearr;</span>
+      </a>
+    </div>
   </section>
 
   <script>
@@ -69,7 +181,7 @@ const t = useTranslations(lang);
       let i = 0;
       const cursor = document.createElement('span');
       cursor.textContent = '▍';
-      cursor.className = 'text-sky-500';
+      cursor.className = 'text-cyan-500';
       el.appendChild(cursor);
       const timer = setInterval(() => {
         if (i < text.length) {

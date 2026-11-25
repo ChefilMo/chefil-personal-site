@@ -2,7 +2,6 @@
 import BaseHead from '../components/BaseHead.astro';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
-import ThemeToggle from '../components/ThemeToggle.astro';
 import { defaultLang, type Lang } from '../i18n/utils';
 import { withBase } from '../utils/url';
 import '../styles/global.css';
@@ -21,6 +20,7 @@ const lang = (Astro.currentLocale ?? defaultLang) as Lang;
   <head>
     <!-- 防暗色闪烁：在样式应用前根据存储/系统偏好设置主题 -->
     <script is:inline>
+      document.documentElement.classList.add('reveal-ready');
       const stored = localStorage.getItem('theme');
       const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
       if (stored === 'dark' || (!stored && prefersDark)) {
@@ -29,15 +29,17 @@ const lang = (Astro.currentLocale ?? defaultLang) as Lang;
     </script>
     <BaseHead title={title} description={description} />
   </head>
-  <body class="flex min-h-screen flex-col bg-white font-sans text-gray-900 dark:bg-gray-900 dark:text-gray-100">
-    <header class="mx-auto flex w-full max-w-4xl items-center justify-between px-4 py-4">
-      <a href={withBase(`${lang}/`)} class="text-lg font-semibold">Chefil</a>
-      <div class="flex items-center">
+  <body class="flex min-h-screen flex-col bg-slate-50 font-sans text-slate-900 antialiased dark:bg-slate-950 dark:text-slate-100">
+    <header class="sticky top-0 z-40 border-b border-slate-200/70 bg-slate-50/80 backdrop-blur-xl dark:border-white/10 dark:bg-slate-950/75">
+      <div class="mx-auto flex h-[4.5rem] w-full max-w-6xl items-center justify-between px-5 sm:px-6 lg:px-8">
+        <a href={withBase(`${lang}/`)} class="group flex items-center gap-2.5" aria-label="Chefil">
+          <span class="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-900 font-mono text-sm font-bold text-cyan-300 shadow-sm transition-transform group-hover:-rotate-3 dark:bg-cyan-400 dark:text-slate-950">C_</span>
+          <span class="text-lg font-semibold tracking-tight">Chefil</span>
+        </a>
         <Nav />
-        <ThemeToggle />
       </div>
     </header>
-    <main class="mx-auto w-full max-w-4xl flex-1 px-4 py-8">
+    <main class="mx-auto w-full max-w-6xl flex-1 px-5 py-10 sm:px-6 sm:py-14 lg:px-8">
       <slot />
     </main>
     <Footer />
