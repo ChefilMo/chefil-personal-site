@@ -27,7 +27,7 @@ export const projects: Project[] = [
     },
     tags: ['C', 'ARM Cortex-M0+', '低功耗设计', 'Bootloader/OTA', 'UART 通信协议', 'Keil MDK'],
     links: [],
-    image: 'images/products/temperature-400b.webp',
+    image: 'images/products/temperature-400j.webp',
     featured: true,
     relatedSeries: 'wifi-thermometer',
   },
