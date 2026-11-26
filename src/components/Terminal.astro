@@ -18,7 +18,7 @@ const termData = {
   bio: site.bio[lang],
   skills: site.skills,
   socials: site.socials,
-  experience: experience.map((e) => ({ period: e.period, title: e.title[lang], org: e.org })),
+  experience: experience.map((e) => ({ period: e.period, title: e.title[lang] })),
   projects: projects.map((p) => ({ name: p.name[lang], summary: p.summary[lang], tags: p.tags })),
 };
 ---
@@ -101,7 +101,7 @@ const termData = {
         for (const s of termData.skills) print('  ▸ ' + s);
         break;
       case 'experience':
-        for (const e of termData.experience) print(`  ${e.period}  ${e.title} @ ${e.org}`);
+        for (const e of termData.experience) print(`  ${e.period}  ${e.title}`);
         break;
       case 'projects':
         for (const p of termData.projects) print(`  ▸ ${p.name} — ${p.tags.join(' / ')}`);
