@@ -47,7 +47,7 @@ export const site = {
       label: { zh: '涂鸦 IoT 生态实践', en: 'Building with Tuya IoT' },
     },
     {
-      value: { zh: '数百款', en: 'Hundreds' },
+      value: { zh: '几十款', en: 'Dozens' },
       label: { zh: '独立交付量产产品', en: 'Mass-produced devices delivered' },
     },
   ],
